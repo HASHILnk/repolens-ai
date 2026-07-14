@@ -53,15 +53,38 @@ The system is designed with a client-server architecture using a React + TypeScr
 
 RepoLens uses a classic client-server model:
 
-```
-[ Vite React Frontend ] (Port 5173)
-         │
-         │ (Proxied /api/* requests)
-         ▼
-[ Express Node Backend ] (Port 8787)
-   ├── MCP Manager (GitHub, Fetch, Filesystem, Context7 SDK connections)
-   ├── Analysis Engine (Deterministic Heuristics, Tech Stack & Route Parsers)
-   └── LLM Adapter (OpenAI-compatible endpoints: xAI, Groq, Ollama, OpenRouter)
+```mermaid
+flowchart TD
+    subgraph Client ["Client (Vite + React + TS)"]
+        UI["src/App.tsx (Dashboard UI)"]
+        Chat["Chat Panel"]
+        MermaidRender["Mermaid Diagram Renderer"]
+    end
+
+    subgraph Server ["Backend (Node.js + Express)"]
+        API["server/index.js (Express API)"]
+        Inspector["Source Inspectors (GitHub, ZIP, Website)"]
+        Engine["Heuristic Analysis Engine"]
+        LLM["LLM Provider Adapter"]
+    end
+
+    subgraph External ["External Services & Tools"]
+        MCP["Model Context Protocol (MCP) Servers"]
+        LLMApis["LLM APIs (OpenAI, Groq, xAI, Ollama)"]
+        GitHubAPI["GitHub REST API"]
+    end
+
+    UI -->|1. POST /api/analyze| API
+    Chat -->|2. POST /api/chat| API
+    API --> Inspector
+    Inspector -->|Fallback| GitHubAPI
+    Inspector -->|Connect via SDK| MCP
+    Inspector --> Engine
+    Engine -->|Deterministic Findings| API
+    API --> LLM
+    LLM -->|Optional Enhancement| LLMApis
+    API -->|3. Return JSON analysis| UI
+    UI --> MermaidRender
 ```
 
 ### Key Directory Layout
