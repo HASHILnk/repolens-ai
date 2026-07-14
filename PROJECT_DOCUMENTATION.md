@@ -50,16 +50,18 @@ RepoLens uses a client-server architecture.
 
 ```mermaid
 flowchart TD
-    Input[GitHub URL / ZIP File / Website URL] --> Client[React Frontend (App.tsx)]
-    Client -->|POST /api/analyze| Server[Express Backend (server/index.js)]
+    Input["GitHub URL / ZIP File / Website URL"] --> Client["React Frontend (App.tsx)"]
+    Client -->|POST /api/analyze| Server["Express Backend (server/index.js)"]
     
     Server --> Heuristics[Deterministic Analysis Engine]
     Server -.->|Optional SDK| MCP[Model Context Protocol Servers]
     Server -.->|Optional AI Key| LLM[LLM Provider API]
     
-    Heuristics & MCP & LLM --> Server
+    Heuristics --> Server
+    MCP --> Server
+    LLM --> Server
     Server -->|Structured JSON Output| Client
-    Client --> Output[Interactive Dashboard & Project Chat]
+    Client --> Output["Interactive Dashboard & Project Chat"]
 ```
 
 
