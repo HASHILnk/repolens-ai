@@ -1,0 +1,40 @@
+{
+  "servers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["mcp-server-fetch-typescript"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "D:/projects/RepoLens"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  },
+  "tools": {
+    "github": {
+      "search_repositories": ["search_repositories"],
+      "get_file_contents": ["get_file_contents", "read_file"]
+    },
+    "fetch": {
+      "fetch": ["get_markdown", "get_markdown_summary", "fetch"]
+    },
+    "filesystem": {
+      "list_directory": ["list_directory", "directory_tree"],
+      "read_file": ["read_file", "read_text_file"]
+    },
+    "context7": {
+      "resolve-library-id": ["resolve-library-id", "resolve_library_id"],
+      "get-library-docs": ["get-library-docs", "get_library_docs"]
+    }
+  }
+}
