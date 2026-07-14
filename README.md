@@ -55,36 +55,16 @@ RepoLens uses a classic client-server model:
 
 ```mermaid
 flowchart TD
-    subgraph Client ["Client (Vite + React + TS)"]
-        UI["src/App.tsx (Dashboard UI)"]
-        Chat["Chat Panel"]
-        MermaidRender["Mermaid Diagram Renderer"]
-    end
-
-    subgraph Server ["Backend (Node.js + Express)"]
-        API["server/index.js (Express API)"]
-        Inspector["Source Inspectors (GitHub, ZIP, Website)"]
-        Engine["Heuristic Analysis Engine"]
-        LLM["LLM Provider Adapter"]
-    end
-
-    subgraph External ["External Services & Tools"]
-        MCP["Model Context Protocol (MCP) Servers"]
-        LLMApis["LLM APIs (OpenAI, Groq, xAI, Ollama)"]
-        GitHubAPI["GitHub REST API"]
-    end
-
-    UI -->|1. POST /api/analyze| API
-    Chat -->|2. POST /api/chat| API
-    API --> Inspector
-    Inspector -->|Fallback| GitHubAPI
-    Inspector -->|Connect via SDK| MCP
-    Inspector --> Engine
-    Engine -->|Deterministic Findings| API
-    API --> LLM
-    LLM -->|Optional Enhancement| LLMApis
-    API -->|3. Return JSON analysis| UI
-    UI --> MermaidRender
+    Input[GitHub URL / ZIP File / Website URL] --> Client[React Frontend (App.tsx)]
+    Client -->|POST /api/analyze| Server[Express Backend (server/index.js)]
+    
+    Server --> Heuristics[Deterministic Analysis Engine]
+    Server -.->|Optional SDK| MCP[Model Context Protocol Servers]
+    Server -.->|Optional AI Key| LLM[LLM Provider API]
+    
+    Heuristics & MCP & LLM --> Server
+    Server -->|Structured JSON Output| Client
+    Client --> Output[Interactive Dashboard & Project Chat]
 ```
 
 ### Key Directory Layout

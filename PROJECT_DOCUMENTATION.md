@@ -48,6 +48,21 @@ The main objective of RepoLens is to make unfamiliar projects easier to understa
 
 RepoLens uses a client-server architecture.
 
+```mermaid
+flowchart TD
+    Input[GitHub URL / ZIP File / Website URL] --> Client[React Frontend (App.tsx)]
+    Client -->|POST /api/analyze| Server[Express Backend (server/index.js)]
+    
+    Server --> Heuristics[Deterministic Analysis Engine]
+    Server -.->|Optional SDK| MCP[Model Context Protocol Servers]
+    Server -.->|Optional AI Key| LLM[LLM Provider API]
+    
+    Heuristics & MCP & LLM --> Server
+    Server -->|Structured JSON Output| Client
+    Client --> Output[Interactive Dashboard & Project Chat]
+```
+
+
 The frontend is a React dashboard built with Vite. It allows the user to choose the source type, start an analysis, view generated results across multiple tabs, inspect the MCP pipeline, and chat with the analyzed project context.
 
 The backend is an Express server located in `server/index.js`. It exposes API endpoints for analysis, chat, and status checking. The backend handles source inspection, MCP tool calls, fallback data collection, heuristic analysis, optional Context7 documentation lookup, and optional LLM enhancement.
